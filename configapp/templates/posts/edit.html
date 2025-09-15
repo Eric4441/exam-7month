@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} - Tahrirlash{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-edit me-2"></i>
+                    Postni Tahrirlash
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label for="title" class="form-label">
+                            <i class="fas fa-heading me-2"></i>Sarlavha
+                        </label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="content" class="form-label">
+                            <i class="fas fa-edit me-2"></i>Mazmun
+                        </label>
+                        <textarea class="form-control" id="content" name="content" rows="12" required>{{ post.content }}</textarea>
+                        <small class="text-muted">Markdown formatini ishlatishingiz mumkin</small>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Diqqat:</strong> Post tahrirlanishi bilan o'zgarishlar darhol saqlanaadi.
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Post statistikasi</h6>
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <div class="h5 mb-0">{{ post.comments.count }}</div>
+                                            <small class="text-muted">Izohlar</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="h5 mb-0">{{ post.created_at|timesince }}</div>
+                                            <small class="text-muted">Avval yaratilgan</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Tezkor havolalar</h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="{% url 'post_detail' post.pk %}" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye me-1"></i>Postni ko'rish
+                                        </a>
+                                        <a href="{% url 'post_delete' post.pk %}" class="btn btn-outline-danger btn-sm" 
+                                           onclick="return confirm('Rostdan ham bu postni o\'chirishni xohlaysizmi?')">
+                                            <i class="fas fa-trash me-1"></i>Postni o'chirish
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'post_detail' post.pk %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Bekor qilish
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>O'zgarishlarni saqlash
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-resize textarea
+const textarea = document.getElementById('content');
+function resizeTextarea() {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+}
+
+textarea.addEventListener('input', resizeTextarea);
+window.addEventListener('load', resizeTextarea);
+
+// Title length warning
+document.getElementById('title').addEventListener('input', function() {
+    const title = this.value;
+    if (title.length > 50) {
+        this.classList.add('border-warning');
+        if (!document.querySelector('.title-warning')) {
+            const warning = document.createElement('small');
+            warning.className = 'text-warning title-warning';
+            warning.textContent = 'Sarlavha juda uzun bo\'lishi mumkin';
+            this.parentNode.appendChild(warning);
+        }
+    } else {
+        this.classList.remove('border-warning');
+        const warning = document.querySelector('.title-warning');
+        if (warning) warning.remove();
+    }
+});
+
+// Confirm before leaving with unsaved changes
+let originalTitle = document.getElementById('title').value;
+let originalContent = document.getElementById('content').value;
+
+window.addEventListener('beforeunload', function(e) {
+    const currentTitle = document.getElementById('title').value;
+    const currentContent = document.getElementById('content').value;
+    
+    if (currentTitle !== originalTitle || currentContent !== originalContent) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+</script>
+{% endblock %}

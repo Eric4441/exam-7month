@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Yangi Post - Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-plus me-2"></i>
+                    Yangi Post Yaratish
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label for="title" class="form-label">
+                            <i class="fas fa-heading me-2"></i>Sarlavha
+                        </label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Post sarlavhasini kiriting..." required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="content" class="form-label">
+                            <i class="fas fa-edit me-2"></i>Mazmun
+                        </label>
+                        <textarea class="form-control" id="content" name="content" rows="12" placeholder="Post mazmunini yozing..." required></textarea>
+                        <small class="text-muted">Markdown formatini ishlatishingiz mumkin</small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Maslahat:</strong> Yaxshi post yozish uchun aniq sarlavha va tushunarli mazmun yozing.
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'post_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Bekor qilish
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-2"></i>Nashr qilish
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-resize textarea
+const textarea = document.getElementById('content');
+textarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+});
+
+// Preview functionality (optional enhancement)
+document.getElementById('title').addEventListener('input', function() {
+    const title = this.value;
+    if (title.length > 50) {
+        this.classList.add('border-warning');
+        if (!document.querySelector('.title-warning')) {
+            const warning = document.createElement('small');
+            warning.className = 'text-warning title-warning';
+            warning.textContent = 'Sarlavha juda uzun bo\'lishi mumkin';
+            this.parentNode.appendChild(warning);
+        }
+    } else {
+        this.classList.remove('border-warning');
+        const warning = document.querySelector('.title-warning');
+        if (warning) warning.remove();
+    }
+});
+</script>
+{% endblock %}

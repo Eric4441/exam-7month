@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Profilni tahrirlash - Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-user-edit me-2"></i>
+                    Profilni tahrirlash
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="current-avatar mb-3">
+                                {% if profile.avatar %}
+                                    <img src="{{ profile.avatar.url }}" alt="Current Avatar" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 150px; height: 150px;">
+                                        <i class="fas fa-user text-white" style="font-size: 4rem;"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="avatar" class="form-label">
+                                    <i class="fas fa-camera me-2"></i>Avatar
+                                </label>
+                                <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                                <small class="text-muted">JPG, PNG fayllari qabul qilinadi</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="bio" class="form-label">
+                                    <i class="fas fa-info-circle me-2"></i>Bio
+                                </label>
+                                <textarea class="form-control" id="bio" name="bio" rows="6" placeholder="O'zingiz haqingizda qisqacha ma'lumot...">{{ profile.bio|default_if_none:"" }}</textarea>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="website" class="form-label">
+                                    <i class="fas fa-globe me-2"></i>Veb-sayt
+                                </label>
+                                <input type="url" class="form-control" id="website" name="website" value="{{ profile.website|default_if_none:"" }}" placeholder="https://example.com">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Eslatma:</strong> Foydalanuvchi nomi va email manzilini o'zgartirish uchun admin bilan bog'laning.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'profile_view' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Bekor qilish
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Saqlash
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('avatar').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const currentAvatar = document.querySelector('.current-avatar img, .current-avatar div');
+            if (currentAvatar.tagName === 'IMG') {
+                currentAvatar.src = e.target.result;
+            } else {
+                currentAvatar.outerHTML = `<img src="${e.target.result}" alt="New Avatar" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">`;
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

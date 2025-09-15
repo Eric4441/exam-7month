@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ profile.user.username }} - Profil{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="{{ profile.user.username }}" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 150px; height: 150px;">
+                        <i class="fas fa-user text-white" style="font-size: 4rem;"></i>
+                    </div>
+                {% endif %}
+                
+                <h3 class="card-title">{{ profile.user.username }}</h3>
+                
+                {% if profile.user.first_name or profile.user.last_name %}
+                    <p class="text-muted">{{ profile.user.first_name }} {{ profile.user.last_name }}</p>
+                {% endif %}
+                
+                {% if profile.user.email %}
+                    <p class="text-muted">
+                        <i class="fas fa-envelope me-2"></i>{{ profile.user.email }}
+                    </p>
+                {% endif %}
+                
+                {% if profile.website %}
+                    <p class="mb-2">
+                        <a href="{{ profile.website }}" target="_blank" class="text-primary text-decoration-none">
+                            <i class="fas fa-globe me-2"></i>Veb-sayt
+                        </a>
+                    </p>
+                {% endif %}
+                
+                <p class="text-muted small">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Qo'shilgan: {{ profile.user.date_joined|date:"d.m.Y" }}
+                </p>
+                
+                {% if user == profile.user %}
+                    <a href="{% url 'profile_edit' %}" class="btn btn-primary">
+                        <i class="fas fa-edit me-2"></i>Profilni tahrirlash
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Ma'lumotlar
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if profile.bio %}
+                    <h6>Bio:</h6>
+                    <p class="text-muted">{{ profile.bio|linebreaks }}</p>
+                {% else %}
+                    <p class="text-muted text-center py-4">
+                        <i class="fas fa-user-edit me-2"></i>
+                        Hali bio qo'shilmagan
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-blog me-2"></i>Postlar
+                </h5>
+            </div>
+            <div class="card-body">
+                {% with posts=profile.user.posts.all %}
+                    {% if posts %}
+                        <div class="row">
+                            {% for post in posts|slice:":6" %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <a href="{% url 'post_detail' post.pk %}" class="text-decoration-none">
+                                                    {{ post.title }}
+                                                </a>
+                                            </h6>
+                                            <p class="card-text small text-muted">
+                                                {{ post.content|truncatewords:15 }}
+                                            </p>
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock me-1"></i>
+                                                {{ post.created_at|timesince }} avval
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if posts.count > 6 %}
+                            <div class="text-center mt-3">
+                                <a href="{% url 'post_list' %}" class="btn btn-outline-primary">
+                                    Barcha postlarni ko'rish ({{ posts.count }})
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted text-center py-4">
+                            <i class="fas fa-edit me-2"></i>
+                            Hali post yozilmagan
+                        </p>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

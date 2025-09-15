@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} - Blog{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <!-- Post Content -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h1 class="card-title">{{ post.title }}</h1>
+                    {% if user == post.author %}
+                        <div class="btn-group">
+                            <a href="{% url 'post_edit' post.pk %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-edit me-1"></i>Tahrirlash
+                            </a>
+                            <a href="{% url 'post_delete' post.pk %}" class="btn btn-outline-danger btn-sm" 
+                               onclick="return confirm('Rostdan ham bu postni o\'chirishni xohlaysizmi?')">
+                                <i class="fas fa-trash me-1"></i>O'chirish
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="post-meta mb-3">
+                    <div class="d-flex align-items-center">
+                        {% if post.author.userprofile.avatar %}
+                            <img src="{{ post.author.userprofile.avatar.url }}" alt="{{ post.author.username }}" class="avatar me-2">
+                        {% else %}
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <strong>{{ post.author.username }}</strong>
+                            <div class="text-muted small">
+                                <i class="fas fa-clock me-1"></i>
+                                {{ post.created_at|date:"d.m.Y H:i" }} ({{ post.created_at|timesince }} avval)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="post-content">
+                    {{ post.content|linebreaks }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comments Section -->
+        <div class="comment-section">
+            <h5 class="mb-4">
+                <i class="fas fa-comments me-2"></i>
+                Izohlar ({{ post.comments.count }})
+            </h5>
+            
+            <!-- Add Comment Form -->
+            {% if user.is_authenticated %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title">Izoh qoldiring</h6>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <textarea class="form-control" name="content" rows="3" placeholder="Izohingizni yozing..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i>Izoh qoldirish
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Izoh qoldirish uchun <a href="{% url 'login' %}" class="alert-link">tizimga kiring</a>
+                </div>
+            {% endif %}
+            
+            <!-- Comments List -->
+            {% if post.comments.all %}
+                {% for comment in post.comments.all %}
+                    <div class="comment">
+                        <div class="d-flex">
+                            {% if comment.author.userprofile.avatar %}
+                                <img src="{{ comment.author.userprofile.avatar.url }}" alt="{{ comment.author.username }}" class="avatar me-3">
+                            {% else %}
+                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong>{{ comment.author.username }}</strong>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>
+                                        {{ comment.created_at|timesince }} avval
+                                    </small>
+                                </div>
+                                <p class="mb-0">{{ comment.content|linebreaks }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="fas fa-comment-slash" style="font-size: 3rem;"></i>
+                    <p class="mt-2">Hali izohlar yo'q. Birinchi bo'lib izoh qoldiring!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-user me-2"></i>Muallif haqida
+                </h6>
+            </div>
+            <div class="card-body text-center">
+                {% if post.author.userprofile.avatar %}
+                    <img src="{{ post.author.userprofile.avatar.url }}" alt="{{ post.author.username }}" class="rounded-circle mb-3" style="width: 80px; height: 80px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-user text-white" style="font-size: 2rem;"></i>
+                    </div>
+                {% endif %}
+                
+                <h6>{{ post.author.username }}</h6>
+                
+                {% if post.author.userprofile.bio %}
+                    <p class="text-muted small">{{ post.author.userprofile.bio|truncatewords:15 }}</p>
+                {% endif %}
+                
+                <div class="post-meta">
+                    <i class="fas fa-blog me-1"></i>
+                    {{ post.author.posts.count }} post
+                </div>
+                
+                {% if post.author.userprofile.website %}
+                    <div class="mt-2">
+                        <a href="{{ post.author.userprofile.website }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-globe me-1"></i>Veb-sayt
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Recent Posts -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-clock me-2"></i>So'ngi postlar
+                </h6>
+            </div>
+            <div class="card-body">
+                {% with recent_posts=post.author.posts.all|slice:":5" %}
+                    {% for recent_post in recent_posts %}
+                        {% if recent_post.pk != post.pk %}
+                            <div class="mb-3">
+                                <h6 class="mb-1">
+                                    <a href="{% url 'post_detail' recent_post.pk %}" class="text-decoration-none">
+                                        {{ recent_post.title|truncatechars:40 }}
+                                    </a>
+                                </h6>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    {{ recent_post.created_at|timesince }} avval
+                                </small>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'post_list' %}" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-2"></i>Barcha postlarga qaytish
+    </a>
+</div>
+{% endblock %}

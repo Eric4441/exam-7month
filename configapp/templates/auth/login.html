@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Kirish - Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <h2 class="card-title">
+                        <i class="fas fa-sign-in-alt text-primary me-2"></i>
+                        Tizimga kirish
+                    </h2>
+                    <p class="text-muted">Hisobingizga kiring</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">
+                            <i class="fas fa-user me-2"></i>Foydalanuvchi nomi
+                        </label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.username.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.password.id_for_label }}" class="form-label">
+                            <i class="fas fa-lock me-2"></i>Parol
+                        </label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.password.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                        <i class="fas fa-sign-in-alt me-2"></i>Kirish
+                    </button>
+                </form>
+
+                <div class="text-center">
+                    <p class="mb-0">Hisobingiz yo'qmi? 
+                        <a href="{% url 'register' %}" class="text-primary text-decoration-none">
+                            Ro'yxatdan o'tish
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        Demo ma'lumotlar uchun: 
+                        <a href="{% url 'install' %}" class="text-primary">
+                            /install/ ga tashrif buyuring
+                        </a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

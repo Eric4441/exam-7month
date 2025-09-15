@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'rest_framework.authtoken',
-    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -120,6 +119,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 # AUTH_USER_MODEL='configapp.User'
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Login/Logout redirect URLs
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/posts/'
+LOGOUT_REDIRECT_URL = '/login/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
