@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<h2>{{ post.title }}</h2>
+<p>{{ post.content }}</p>
+<small>By {{ post.author.username }} at {{ post.created_at }}</small>
+
+<h3>Comments</h3>
+{% for comment in post.comments.all %}
+    <p>{{ comment.content }} — <b>{{ comment.author.username }}</b></p>
+{% empty %}
+    <p>No comments yet.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+<form method="post" action="{% url 'comment_add' post.id %}">
+    {% csrf_token %}
+    <textarea name="content" placeholder="Write a comment..."></textarea>
+    <button type="submit">Add Comment</button>
+</form>
+{% else %}
+    <p><a href="{% url 'login' %}">Login</a> to comment.</p>
+{% endif %}
+{% endblock %}
