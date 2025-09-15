@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Izohlarni boshqarish - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="mb-0">
+            <i class="fas fa-comments me-2"></i>Izohlarni boshqarish
+        </h2>
+    </div>
+    <div class="col-md-4">
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Search and Filter -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <form method="get" class="d-flex">
+            <input type="text" name="search" class="form-control me-2" placeholder="Izoh qidirish..." value="{{ search }}">
+            <input type="text" name="post" class="form-control me-2" placeholder="Post nomi..." value="{{ post_filter }}">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Comments List -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Izohlar ro'yxati ({{ comments.paginator.count }})</h5>
+    </div>
+    <div class="card-body p-0">
+        {% for comment in comments %}
+            <div class="border-bottom p-3">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-start mb-2">
+                            {% if comment.author.userprofile.avatar %}
+                                <img src="{{ comment.author.userprofile.avatar.url }}" alt="{{ comment.author.username }}" class="rounded-circle me-3" style="width: 40px; height: 40px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <strong>{{ comment.author.username }}</strong>
+                                    <small class="text-muted">{{ comment.created_at|timesince }} avval</small>
+                                </div>
+                                <p class="mb-2">{{ comment.content }}</p>
+                                <div class="text-muted">
+                                    <i class="fas fa-blog me-1"></i>
+                                    <a href="{% url 'post_detail' comment.post.pk %}" class="text-decoration-none" target="_blank">
+                                        {{ comment.post.title|truncatechars:50 }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="mb-1">
+                            <span class="badge bg-secondary">{{ comment.content|wordcount }} so'z</span>
+                        </div>
+                        {% if comment.author.is_active %}
+                            <span class="badge bg-success">Faol foydalanuvchi</span>
+                        {% else %}
+                            <span class="badge bg-danger">Nofaol foydalanuvchi</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <div class="btn-group-vertical btn-group-sm">
+                            <a href="{% url 'post_detail' comment.post.pk %}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                <i class="fas fa-eye"></i> Postni ko'rish
+                            </a>
+                            <a href="{% url 'admin_user_detail' comment.author.id %}" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-user"></i> Foydalanuvchi
+                            </a>
+                            <a href="{% url 'admin_delete_comment' comment.id %}" class="btn btn-outline-danger btn-sm" 
+                               onclick="return confirm('Rostdan ham bu izohni o\'chirishni xohlaysizmi?')">
+                                <i class="fas fa-trash"></i> O'chirish
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="text-center py-5">
+                <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Izohlar topilmadi</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if comments.has_other_pages %}
+<nav aria-label="Sahifalar" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if comments.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if search %}&search={{ search }}{% endif %}{% if post_filter %}&post={{ post_filter }}{% endif %}">Birinchi</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ comments.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if post_filter %}&post={{ post_filter }}{% endif %}">Oldingi</a>
+            </li>
+        {% endif %}
+        
+        <li class="page-item active">
+            <span class="page-link">{{ comments.number }} / {{ comments.paginator.num_pages }}</span>
+        </li>
+        
+        {% if comments.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ comments.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if post_filter %}&post={{ post_filter }}{% endif %}">Keyingi</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ comments.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}{% if post_filter %}&post={{ post_filter }}{% endif %}">Oxirgi</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

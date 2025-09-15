@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user_obj.username }} - Foydalanuvchi tafsilotlari{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="mb-0">
+            <i class="fas fa-user me-2"></i>{{ user_obj.username }} - Tafsilotlar
+        </h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'admin_users' %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Orqaga
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- User Info Form -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-edit me-2"></i>Foydalanuvchi ma'lumotlari
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="username" class="form-label">Foydalanuvchi nomi</label>
+                            <input type="text" class="form-control" id="username" value="{{ user_obj.username }}" readonly>
+                            <small class="text-muted">Foydalanuvchi nomini o'zgartirib bo'lmaydi</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user_obj.email }}">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="first_name" class="form-label">Ism</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user_obj.first_name }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="last_name" class="form-label">Familiya</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user_obj.last_name }}">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="website" class="form-label">Veb-sayt</label>
+                            <input type="url" class="form-control" id="website" name="website" value="{{ profile.website|default_if_none:"" }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Qo'shilgan sana</label>
+                            <input type="text" class="form-control" value="{{ user_obj.date_joined|date:"d.m.Y H:i" }}" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea class="form-control" id="bio" name="bio" rows="4">{{ profile.bio|default_if_none:"" }}</textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="is_active" name="is_active" {% if user_obj.is_active %}checked{% endif %}>
+                                <label class="form-check-label" for="is_active">
+                                    Faol foydalanuvchi
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="is_staff" name="is_staff" {% if user_obj.is_staff %}checked{% endif %}>
+                                <label class="form-check-label" for="is_staff">
+                                    Staff huquqlari
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Saqlash
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Stats and Avatar -->
+    <div class="col-md-4">
+        <!-- Avatar -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">Avatar</h6>
+            </div>
+            <div class="card-body text-center">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="{{ user_obj.username }}" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 150px; height: 150px;">
+                        <i class="fas fa-user text-white" style="font-size: 4rem;"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">Statistika</h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="h4 text-primary">{{ user_obj.posts.count }}</div>
+                        <small class="text-muted">Postlar</small>
+                    </div>
+                    <div class="col-6">
+                        <div class="h4 text-info">{{ user_obj.comment_set.count }}</div>
+                        <small class="text-muted">Izohlar</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Holat</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    {% if user_obj.is_superuser %}
+                        <span class="badge bg-danger">Superuser</span>
+                    {% elif user_obj.is_staff %}
+                        <span class="badge bg-warning">Staff</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Oddiy foydalanuvchi</span>
+                    {% endif %}
+                </div>
+                <div class="mb-2">
+                    {% if user_obj.is_active %}
+                        <span class="badge bg-success">Faol</span>
+                    {% else %}
+                        <span class="badge bg-danger">Nofaol</span>
+                    {% endif %}
+                </div>
+                <small class="text-muted">
+                    Oxirgi kirish: 
+                    {% if user_obj.last_login %}
+                        {{ user_obj.last_login|timesince }} avval
+                    {% else %}
+                        Hech qachon
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User's Posts -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">So'ngi postlar</h6>
+            </div>
+            <div class="card-body">
+                {% for post in user_posts %}
+                    <div class="mb-3 p-3 border rounded">
+                        <h6 class="mb-1">{{ post.title }}</h6>
+                        <p class="text-muted small mb-1">{{ post.content|truncatechars:100 }}</p>
+                        <small class="text-muted">{{ post.created_at|timesince }} avval</small>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">Postlar yo'q</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- User's Comments -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">So'ngi izohlar</h6>
+            </div>
+            <div class="card-body">
+                {% for comment in user_comments %}
+                    <div class="mb-3 p-3 border rounded">
+                        <p class="mb-1">{{ comment.content|truncatechars:80 }}</p>
+                        <small class="text-muted">
+                            {{ comment.post.title|truncatechars:30 }} - {{ comment.created_at|timesince }} avval
+                        </small>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">Izohlar yo'q</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

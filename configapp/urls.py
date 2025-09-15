@@ -34,6 +34,15 @@ urlpatterns = [
     
     # Install demo data
     path("install/", install, name="install"),
+    
+    # Frontend Admin URLs
+    path("admin-panel/", admin_dashboard, name="admin_dashboard"),
+    path("admin-panel/users/", admin_users, name="admin_users"),
+    path("admin-panel/users/<int:user_id>/", admin_user_detail, name="admin_user_detail"),
+    path("admin-panel/posts/", admin_posts, name="admin_posts"),
+    path("admin-panel/posts/<int:post_id>/delete/", admin_delete_post, name="admin_delete_post"),
+    path("admin-panel/comments/", admin_comments, name="admin_comments"),
+    path("admin-panel/comments/<int:comment_id>/delete/", admin_delete_comment, name="admin_delete_comment"),
 ]
 # urlpatterns = [
 #     # Postlar

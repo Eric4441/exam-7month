@@ -10,10 +10,202 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator
+from django.db import models
 
-# Home page redirects to posts
+# Home page - Welcome page
 def index(request):
-    return redirect('post_list')
+    # Get some statistics for the homepage
+    total_posts = Post.objects.count()
+    total_users = User.objects.count()
+    total_comments = Comment.objects.count()
+    
+    # Get recent posts for featured section
+    recent_posts = Post.objects.order_by('-created_at')[:3]
+    
+    # Get top contributors (users with most posts)
+    top_contributors = User.objects.annotate(
+        post_count=models.Count('posts')
+    ).filter(post_count__gt=0).order_by('-post_count')[:5]
+    
+    context = {
+        'total_posts': total_posts,
+        'total_users': total_users,
+        'total_comments': total_comments,
+        'recent_posts': recent_posts,
+        'top_contributors': top_contributors,
+    }
+    return render(request, 'home/index.html', context)
+
+# Admin check decorator
+def admin_required(user):
+    return user.is_staff or user.is_superuser
+
+# Frontend Admin Views
+@user_passes_test(admin_required)
+def admin_dashboard(request):
+    """Admin dashboard with statistics"""
+    total_users = User.objects.count()
+    total_posts = Post.objects.count()
+    total_comments = Comment.objects.count()
+    active_users = User.objects.filter(is_active=True).count()
+    
+    recent_users = User.objects.order_by('-date_joined')[:5]
+    recent_posts = Post.objects.order_by('-created_at')[:5]
+    recent_comments = Comment.objects.order_by('-created_at')[:5]
+    
+    context = {
+        'total_users': total_users,
+        'total_posts': total_posts,
+        'total_comments': total_comments,
+        'active_users': active_users,
+        'recent_users': recent_users,
+        'recent_posts': recent_posts,
+        'recent_comments': recent_comments,
+    }
+    return render(request, 'admin_frontend/dashboard.html', context)
+
+@user_passes_test(admin_required)
+def admin_users(request):
+    """Manage users"""
+    users_list = User.objects.all().order_by('-date_joined')
+    
+    # Search functionality
+    search = request.GET.get('search', '')
+    if search:
+        users_list = users_list.filter(
+            username__icontains=search
+        ) | users_list.filter(
+            email__icontains=search
+        ) | users_list.filter(
+            first_name__icontains=search
+        ) | users_list.filter(
+            last_name__icontains=search
+        )
+    
+    # Pagination
+    paginator = Paginator(users_list, 10)
+    page_number = request.GET.get('page')
+    users = paginator.get_page(page_number)
+    
+    return render(request, 'admin_frontend/users.html', {
+        'users': users,
+        'search': search
+    })
+
+@user_passes_test(admin_required)
+def admin_user_detail(request, user_id):
+    """User detail and edit"""
+    user = get_object_or_404(User, id=user_id)
+    profile, created = UserProfile.objects.get_or_create(user=user)
+    
+    if request.method == 'POST':
+        # Update user info
+        user.first_name = request.POST.get('first_name', '')
+        user.last_name = request.POST.get('last_name', '')
+        user.email = request.POST.get('email', '')
+        user.is_active = 'is_active' in request.POST
+        user.is_staff = 'is_staff' in request.POST
+        user.save()
+        
+        # Update profile
+        profile.bio = request.POST.get('bio', '')
+        profile.website = request.POST.get('website', '')
+        profile.save()
+        
+        messages.success(request, f'{user.username} ma\'lumotlari yangilandi!')
+        return redirect('admin_user_detail', user_id=user.id)
+    
+    user_posts = user.posts.all()[:5]
+    user_comments = user.comment_set.all()[:5]
+    
+    return render(request, 'admin_frontend/user_detail.html', {
+        'user_obj': user,
+        'profile': profile,
+        'user_posts': user_posts,
+        'user_comments': user_comments,
+    })
+
+@user_passes_test(admin_required)
+def admin_posts(request):
+    """Manage posts"""
+    posts_list = Post.objects.all().order_by('-created_at')
+    
+    # Search functionality
+    search = request.GET.get('search', '')
+    if search:
+        posts_list = posts_list.filter(
+            title__icontains=search
+        ) | posts_list.filter(
+            content__icontains=search
+        ) | posts_list.filter(
+            author__username__icontains=search
+        )
+    
+    # Filter by author
+    author_filter = request.GET.get('author', '')
+    if author_filter:
+        posts_list = posts_list.filter(author__username__icontains=author_filter)
+    
+    # Pagination
+    paginator = Paginator(posts_list, 15)
+    page_number = request.GET.get('page')
+    posts = paginator.get_page(page_number)
+    
+    return render(request, 'admin_frontend/posts.html', {
+        'posts': posts,
+        'search': search,
+        'author_filter': author_filter
+    })
+
+@user_passes_test(admin_required)
+def admin_comments(request):
+    """Manage comments"""
+    comments_list = Comment.objects.all().order_by('-created_at')
+    
+    # Search functionality
+    search = request.GET.get('search', '')
+    if search:
+        comments_list = comments_list.filter(
+            content__icontains=search
+        ) | comments_list.filter(
+            author__username__icontains=search
+        ) | comments_list.filter(
+            post__title__icontains=search
+        )
+    
+    # Filter by post
+    post_filter = request.GET.get('post', '')
+    if post_filter:
+        comments_list = comments_list.filter(post__title__icontains=post_filter)
+    
+    # Pagination
+    paginator = Paginator(comments_list, 20)
+    page_number = request.GET.get('page')
+    comments = paginator.get_page(page_number)
+    
+    return render(request, 'admin_frontend/comments.html', {
+        'comments': comments,
+        'search': search,
+        'post_filter': post_filter
+    })
+
+@user_passes_test(admin_required)
+def admin_delete_comment(request, comment_id):
+    """Delete comment"""
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.delete()
+    messages.success(request, 'Izoh o\'chirildi!')
+    return redirect('admin_comments')
+
+@user_passes_test(admin_required)
+def admin_delete_post(request, post_id):
+    """Delete post"""
+    post = get_object_or_404(Post, id=post_id)
+    post.delete()
+    messages.success(request, 'Post o\'chirildi!')
+    return redirect('admin_posts')
 # Profile
 class ProfileView(generics.RetrieveAPIView):
     serializer_class = UserProfileSerializer
