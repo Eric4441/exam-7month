@@ -132,7 +132,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'post_list' %}">
+            <a class="navbar-brand" href="{% url 'index' %}">
                 <i class="fas fa-blog me-2"></i>Blog
             </a>
             
@@ -143,8 +143,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">
+                            <i class="fas fa-home me-1"></i>Bosh sahifa
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'post_list' %}">
-                            <i class="fas fa-home me-1"></i>Postlar
+                            <i class="fas fa-blog me-1"></i>Postlar
                         </a>
                     </li>
                     {% if user.is_authenticated %}
