@@ -14,17 +14,16 @@ from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
 from django.db import models
 
-# Home page - Welcome page
+
 def index(request):
-    # Get some statistics for the homepage
     total_posts = Post.objects.count()
     total_users = User.objects.count()
     total_comments = Comment.objects.count()
     
-    # Get recent posts for featured section
+
     recent_posts = Post.objects.order_by('-created_at')[:3]
     
-    # Get top contributors (users with most posts)
+
     top_contributors = User.objects.annotate(
         post_count=models.Count('posts')
     ).filter(post_count__gt=0).order_by('-post_count')[:5]
@@ -38,11 +37,11 @@ def index(request):
     }
     return render(request, 'home/index.html', context)
 
-# Admin check decorator
+
 def admin_required(user):
     return user.is_staff or user.is_superuser
 
-# Frontend Admin Views
+
 @user_passes_test(admin_required)
 def admin_dashboard(request):
     """Admin dashboard with statistics"""
@@ -71,7 +70,7 @@ def admin_users(request):
     """Manage users"""
     users_list = User.objects.all().order_by('-date_joined')
     
-    # Search functionality
+
     search = request.GET.get('search', '')
     if search:
         users_list = users_list.filter(
@@ -84,7 +83,7 @@ def admin_users(request):
             last_name__icontains=search
         )
     
-    # Pagination
+
     paginator = Paginator(users_list, 10)
     page_number = request.GET.get('page')
     users = paginator.get_page(page_number)
@@ -101,7 +100,7 @@ def admin_user_detail(request, user_id):
     profile, created = UserProfile.objects.get_or_create(user=user)
     
     if request.method == 'POST':
-        # Update user info
+
         user.first_name = request.POST.get('first_name', '')
         user.last_name = request.POST.get('last_name', '')
         user.email = request.POST.get('email', '')
@@ -109,7 +108,7 @@ def admin_user_detail(request, user_id):
         user.is_staff = 'is_staff' in request.POST
         user.save()
         
-        # Update profile
+
         profile.bio = request.POST.get('bio', '')
         profile.website = request.POST.get('website', '')
         profile.save()
@@ -436,7 +435,7 @@ def profile_edit(request):
         return redirect("profile_view")
     return render(request, "profile/edit.html", {"profile": profile})
 
-# === Posts ===
+
 def post_list(request):
     posts = Post.objects.all().order_by("-created_at")
     return render(request, "posts/list.html", {"posts": posts})

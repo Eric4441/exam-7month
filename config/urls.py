@@ -45,6 +45,6 @@ urlpatterns = [
     path("api/token/", obtain_auth_token, name="api_token"),
 ]
 
-# Serve media files during development
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
