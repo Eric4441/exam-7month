@@ -11,22 +11,53 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
             min-height: 100vh;
             margin: 0;
+            color: #ffffff;
         }
         
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
         }
         
         .navbar-brand {
-            font-weight: 700;
-            color: #667eea !important;
+            font-weight: 800;
+            color: #00d4ff !important;
             font-size: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #00d4ff !important;
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-menu {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+        }
+        
+        .dropdown-item {
+            color: #ffffff !important;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff !important;
         }
         
         .content-wrapper {
@@ -133,8 +164,8 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'index' %}">
-                <i class="fas fa-blog me-2"></i>Blog
+            <a class="navbar-brand" href="{% url 'portfolio_home' %}">
+                <i class="fas fa-user me-2"></i>Portfolio
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -144,13 +175,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">
-                            <i class="fas fa-home me-1"></i>Bosh sahifa
+                        <a class="nav-link" href="{% url 'portfolio_home' %}">
+                            <i class="fas fa-home me-1"></i>Portfolio
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'post_list' %}">
-                            <i class="fas fa-blog me-1"></i>Postlar
+                            <i class="fas fa-blog me-1"></i>Blog
                         </a>
                     </li>
                     {% if user.is_authenticated %}
@@ -234,9 +265,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <p class="mb-0">© 2025 Blog. Barcha huquqlar himoyalangan.</p>
-        </div>
+      
     </footer>
 
     <!-- Scripts -->

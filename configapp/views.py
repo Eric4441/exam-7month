@@ -14,7 +14,24 @@ from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
 from django.db import models
 
-# Home page - Welcome page
+# Portfolio Home page
+def portfolio_home(request):
+    """Portfolio homepage similar to nematov.uz"""
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        message = request.POST.get('message', '').strip()
+        
+        if name and email and message:
+            # Here you can add email sending functionality
+            # For now, just show a success message
+            messages.success(request, f"Rahmat {name}! Xabaringiz yuborildi. Tez orada sizga javob beraman.")
+        else:
+            messages.error(request, "Iltimos, barcha maydonlarni to'ldiring!")
+    
+    return render(request, 'portfolio/index.html')
+
+# Blog Home page - Welcome page
 def index(request):
     # Get some statistics for the homepage
     total_posts = Post.objects.count()

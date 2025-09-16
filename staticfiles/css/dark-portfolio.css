@@ -1,0 +1,413 @@
+/* Dark Masculine Portfolio Theme */
+
+/* Global Dark Theme */
+body {
+    background: #0a0a0a !important;
+    color: #ffffff !important;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Hero Section - Dark Theme */
+.hero-section {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+    opacity: 0.6;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.4;
+}
+
+/* Typography - Bold and Masculine */
+.hero-title {
+    font-size: 4rem !important;
+    font-weight: 800 !important;
+    background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.8rem !important;
+    font-weight: 600 !important;
+    color: #00d4ff !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: 0.05em;
+}
+
+.hero-description {
+    font-size: 1.2rem !important;
+    color: #b0b0b0 !important;
+    line-height: 1.6;
+    max-width: 500px;
+}
+
+/* Buttons - Dark Theme */
+.btn-portfolio {
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    padding: 15px 35px !important;
+    color: white !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    transition: all 0.3s ease !important;
+    margin: 0.5rem !important;
+    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.btn-portfolio:hover {
+    transform: translateY(-3px) scale(1.05) !important;
+    box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4) !important;
+    color: white !important;
+}
+
+.btn-outline-portfolio {
+    background: transparent !important;
+    border: 2px solid #00d4ff !important;
+    color: #00d4ff !important;
+    border-radius: 30px !important;
+    padding: 15px 35px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    transition: all 0.3s ease !important;
+    margin: 0.5rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.btn-outline-portfolio:hover {
+    background: #00d4ff !important;
+    color: #0a0a0a !important;
+    transform: translateY(-3px) scale(1.05) !important;
+    box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4) !important;
+}
+
+/* Profile Image - Dark Theme */
+.hero-image img {
+    width: 350px !important;
+    height: 350px !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    border: 4px solid rgba(0, 212, 255, 0.3) !important;
+    box-shadow: 
+        0 0 50px rgba(0, 212, 255, 0.3),
+        0 0 100px rgba(0, 212, 255, 0.1),
+        inset 0 0 50px rgba(0, 212, 255, 0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+.hero-image img:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 
+        0 0 80px rgba(0, 212, 255, 0.5),
+        0 0 150px rgba(0, 212, 255, 0.2),
+        inset 0 0 80px rgba(0, 212, 255, 0.2) !important;
+}
+
+/* About Section - Dark Theme */
+.about-section {
+    background: #111111 !important;
+    position: relative;
+}
+
+.about-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.02) 50%, transparent 70%);
+}
+
+.section-title {
+    font-size: 3rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    text-align: center !important;
+    margin-bottom: 4rem !important;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+    border-radius: 2px;
+}
+
+/* Skills Section - Dark Theme */
+.skill-bar {
+    background: #222222 !important;
+    border-radius: 15px !important;
+    height: 12px !important;
+    margin-bottom: 1.5rem !important;
+    overflow: hidden !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+.skill-progress {
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%) !important;
+    height: 100% !important;
+    border-radius: 15px !important;
+    transition: width 2s ease-in-out !important;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3) !important;
+}
+
+/* Project Cards - Dark Theme */
+.project-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #222222 100%) !important;
+    border-radius: 20px !important;
+    padding: 2.5rem !important;
+    box-shadow: 
+        0 20px 40px rgba(0,0,0,0.3),
+        0 0 0 1px rgba(0, 212, 255, 0.1) !important;
+    transition: all 0.3s ease !important;
+    height: 100% !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.project-card:hover::before {
+    left: 100%;
+}
+
+.project-card:hover {
+    transform: translateY(-15px) scale(1.02) !important;
+    box-shadow: 
+        0 30px 60px rgba(0,0,0,0.4),
+        0 0 0 1px rgba(0, 212, 255, 0.3) !important;
+}
+
+.project-icon {
+    width: 70px !important;
+    height: 70px !important;
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%) !important;
+    border-radius: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 2rem !important;
+    box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3) !important;
+}
+
+.project-card h5 {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 1.3rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.project-card p {
+    color: #b0b0b0 !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.5rem !important;
+}
+
+/* Contact Section - Dark Theme */
+.contact-section {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important;
+    color: white !important;
+    position: relative;
+}
+
+.contact-card {
+    background: rgba(26, 26, 46, 0.8) !important;
+    backdrop-filter: blur(20px) !important;
+    border-radius: 20px !important;
+    padding: 3rem !important;
+    border: 1px solid rgba(0, 212, 255, 0.2) !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important;
+}
+
+.contact-card h5 {
+    color: #00d4ff !important;
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+    margin-bottom: 2rem !important;
+}
+
+.contact-info p {
+    color: #b0b0b0 !important;
+    font-size: 1.1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.contact-info i {
+    color: #00d4ff !important;
+    width: 25px !important;
+    text-align: center !important;
+}
+
+/* Form Styling - Dark Theme */
+.contact-card form .form-control {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(0, 212, 255, 0.2) !important;
+    color: white !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 15px !important;
+    padding: 15px 20px !important;
+    font-size: 1rem !important;
+}
+
+.contact-card form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.contact-card form .form-control:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #00d4ff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.25) !important;
+    color: white !important;
+}
+
+.contact-card form .btn {
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%) !important;
+    border: none !important;
+    border-radius: 15px !important;
+    padding: 15px 30px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.3s ease !important;
+}
+
+.contact-card form .btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4) !important;
+}
+
+/* Social Links - Dark Theme */
+.social-links .btn {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    background: rgba(0, 212, 255, 0.1) !important;
+    border: 2px solid rgba(0, 212, 255, 0.3) !important;
+    color: #00d4ff !important;
+}
+
+.social-links .btn:hover {
+    transform: translateY(-5px) scale(1.1) !important;
+    box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4) !important;
+    background: #00d4ff !important;
+    color: #0a0a0a !important;
+}
+
+/* Badge Styling - Dark Theme */
+.badge {
+    font-size: 0.8rem !important;
+    padding: 0.6rem 1rem !important;
+    border-radius: 25px !important;
+    font-weight: 600 !important;
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%) !important;
+    color: #0a0a0a !important;
+}
+
+/* Floating Elements - Dark Theme */
+.floating-element {
+    background: rgba(0, 212, 255, 0.1) !important;
+    border: 1px solid rgba(0, 212, 255, 0.2) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem !important;
+    }
+    
+    .section-title {
+        font-size: 2.2rem !important;
+    }
+    
+    .hero-image img {
+        width: 250px !important;
+        height: 250px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 2rem !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem !important;
+    }
+    
+    .btn-portfolio, .btn-outline-portfolio {
+        display: block !important;
+        width: 100% !important;
+        margin: 0.5rem 0 !important;
+    }
+}
+
+/* Scroll Indicator - Dark Theme */
+.scroll-progress {
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%) !important;
+}
+
+/* Text Selection - Dark Theme */
+::selection {
+    background: rgba(0, 212, 255, 0.3) !important;
+    color: inherit !important;
+}
+
+::-moz-selection {
+    background: rgba(0, 212, 255, 0.3) !important;
+    color: inherit !important;
+}
