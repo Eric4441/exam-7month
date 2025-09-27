@@ -1,0 +1,492 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Portfolio - Django Developer{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/dark-portfolio.css' %}" rel="stylesheet">
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        animation: fadeInUp 1s ease-out;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+        animation: fadeInUp 1s ease-out 0.2s both;
+    }
+    
+    .hero-description {
+        font-size: 1.1rem;
+        margin-bottom: 3rem;
+        opacity: 0.8;
+        animation: fadeInUp 1s ease-out 0.4s both;
+    }
+    
+    .hero-buttons {
+        animation: fadeInUp 1s ease-out 0.6s both;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .section-padding {
+        padding: 80px 0;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 3rem;
+        color: #333;
+    }
+    
+    .about-section {
+        background: #f8f9fa;
+    }
+    
+    .skill-bar {
+        background: #e9ecef;
+        border-radius: 10px;
+        height: 8px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+    
+    .skill-progress {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        height: 100%;
+        border-radius: 10px;
+        transition: width 2s ease-in-out;
+    }
+    
+    .project-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .project-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .contact-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .contact-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .floating-elements {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+    }
+    
+    .floating-element {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    .floating-element:nth-child(1) {
+        width: 80px;
+        height: 80px;
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+    
+    .floating-element:nth-child(2) {
+        width: 120px;
+        height: 120px;
+        top: 60%;
+        right: 10%;
+        animation-delay: 2s;
+    }
+    
+    .floating-element:nth-child(3) {
+        width: 60px;
+        height: 60px;
+        top: 40%;
+        left: 80%;
+        animation-delay: 4s;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    .navbar-portfolio {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-portfolio {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
+    }
+    
+    .btn-portfolio:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .btn-outline-portfolio {
+        background: transparent;
+        border: 2px solid white;
+        color: white;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
+    }
+    
+    .btn-outline-portfolio:hover {
+        background: white;
+        color: #667eea;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title">Hello I'm <br> Erkin</h1>
+                    <h3 class="hero-subtitle">Django Developer</h3>
+                    <p class="hero-description">
+                        Passionate Django developer with expertise in building robust, scalable web applications. 
+                        I specialize in creating modern, efficient solutions that power exceptional user experiences.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="{% url 'post_list' %}" class="btn-portfolio">
+                            <i class="fas fa-blog me-2"></i>View My Blog
+                        </a>
+                        <a href="#contact" class="btn-outline-portfolio">
+                            <i class="fas fa-envelope me-2"></i>Contact Me
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="hero-image">
+                    <img src="{% static 'assets/erkin.jpg' %}" alt="Erkin" class="img-fluid rounded-circle" style="width: 300px; height: 300px; object-fit: cover; border: 3px solid rgba(255,255,255,0.3);">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section section-padding">
+    <div class="container">
+        <h2 class="section-title">About Me</h2>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="about-content">
+                    <h3>Hi! I'm a Django developer</h3>
+                    <p>
+                        I'm a passionate Django developer with expertise in building robust, scalable, and efficient server-side applications. 
+                        I focus on writing clean, maintainable code and designing architectures that are both efficient and future-proof.
+                    </p>
+                    <p>
+                        I enjoy solving complex problems and creating reliable systems that power modern web experiences. 
+                        My goal is to deliver high-quality solutions that exceed expectations.
+                    </p>
+                    <div class="contact-info mt-4">
+                        <p><i class="fas fa-envelope me-2"></i> erkin.developer@gmail.com</p>
+                        <p><i class="fas fa-phone me-2"></i> +998 (90) 123-45-67</p>
+                        <p><i class="fas fa-map-marker-alt me-2"></i> Uzbekistan, Tashkent</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="skills-section">
+                    <h4>Technical Skills</h4>
+                    <div class="skill-item">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Python</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Django Framework</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Django REST API</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>HTML/CSS</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>JavaScript</span>
+                            <span>70%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 70%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section class="section-padding">
+    <div class="container">
+        <h2 class="section-title">My Projects</h2>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-blog text-white"></i>
+                    </div>
+                    <h5>Django Blog Platform</h5>
+                    <p>A comprehensive blog platform built with Django featuring user authentication, post management, comments system, and admin panel.</p>
+                    <div class="project-tech">
+                        <span class="badge bg-primary me-1">Python</span>
+                        <span class="badge bg-primary me-1">Django</span>
+                        <span class="badge bg-primary me-1">Bootstrap</span>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{% url 'post_list' %}" class="btn btn-outline-primary btn-sm">View Blog</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-shopping-cart text-white"></i>
+                    </div>
+                    <h5>E-commerce Platform</h5>
+                    <p>A full-featured e-commerce solution with product management, shopping cart, payment integration, and order tracking.</p>
+                    <div class="project-tech">
+                        <span class="badge bg-primary me-1">Django</span>
+                        <span class="badge bg-primary me-1">PostgreSQL</span>
+                        <span class="badge bg-primary me-1">Stripe API</span>
+                    </div>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-primary btn-sm">Coming Soon</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-graduation-cap text-white"></i>
+                    </div>
+                    <h5>Learning Management System</h5>
+                    <p>An LMS platform for educational institutions with course management, student tracking, and progress monitoring.</p>
+                    <div class="project-tech">
+                        <span class="badge bg-primary me-1">Django REST</span>
+                        <span class="badge bg-primary me-1">React</span>
+                        <span class="badge bg-primary me-1">PostgreSQL</span>
+                    </div>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-primary btn-sm">Coming Soon</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact-section section-padding">
+    <div class="container">
+        <h2 class="section-title text-white">Contact Me</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="contact-card">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-4">Get In Touch</h5>
+                            <div class="contact-info">
+                                <p><i class="fas fa-envelope me-3"></i> your.email@example.com</p>
+                                <p><i class="fas fa-phone me-3"></i> +998 (XX) XXX-XXXX</p>
+                                <p><i class="fas fa-map-marker-alt me-3"></i> Uzbekistan, Tashkent</p>
+                            </div>
+                            <div class="social-links mt-4">
+                                <a href="#" class="btn btn-outline-light me-2"><i class="fab fa-github"></i></a>
+                                <a href="#" class="btn btn-outline-light me-2"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="btn btn-outline-light me-2"><i class="fab fa-telegram"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea name="message" class="form-control" rows="4" placeholder="Your Message" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-light w-100">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animate skill bars on scroll
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const skillBars = entry.target.querySelectorAll('.skill-progress');
+                skillBars.forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                });
+            }
+        });
+    }, observerOptions);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const skillsSection = document.querySelector('.skills-section');
+        if (skillsSection) {
+            observer.observe(skillsSection);
+        }
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

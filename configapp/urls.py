@@ -2,8 +2,10 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    # Home page
-    path("", index, name="index"),
+    # Portfolio Home page
+    path("", portfolio_home, name="portfolio_home"),
+    # Blog Home page
+    path("blog/", index, name="index"),
     
     # Authentication URLs
     path("register/", register_view, name="register"),
